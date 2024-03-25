@@ -1,0 +1,129 @@
+#!/bin/bash
+
+### ΤΟ DO ###
+# - Manage flatpak
+# - Manage snap
+# - Manage npm
+# - Manage pip (already implemented but not too sure about it)
+# - Updating/Downgrading certain packages
+# - Searching in all package managers spm wraps around
+# - Config file (when needed, not big priority rn)
+
+### SPM LICENSE ###
+#
+# MIT License
+#
+# Copyright (c) 2024 slashOS Team
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+help(){
+  echo "Welcome to the Slash Package Manager!"
+  echo "This is a very early alpha and is only intended to be used on Arch-Linux based systems."
+  echo ""
+  echo "Syntax: spm [action] ([arguements] [package])"
+  echo ""
+  echo "Main Actions:"
+  echo "        help        | shows this, don't specify a package after"
+  echo "        remove      | removes a package specified using pacman"
+  echo "        install     | installs the specified package using pacman" 
+  echo "                    | (use the -a arguement to install from the AUR instead)"
+  echo "        update      | updates all packages (use -a to update AUR only or -ap to update both pacman and" 
+  echo "                    | AUR packages) we are currently working on a way to downgrade/update certain packages."
+  echo ""
+  echo "For Developers:"
+  echo "        satisfydeps | installs all dependencies for spm"
+  echo "                    | (you can use this if you want to implement spm to your OS???! just sayin..."
+  echo "                    | or uhh install it in your system lmao."
+  echo "                    | this won't really affect you other than that but it ain't recommended you do it" 
+  echo "                    | for no reason)"
+  echo ""
+  echo "NOTE: Experiemental options are not shown here!"
+}
+
+remove() {
+    sudo pacman -R $1
+    echo "Completed!"
+    sleep 3
+}
+
+pipremove() {
+    pip uninstall $1 --break-system-packages
+}
+
+install() {
+    sudo pacman -Sy $1
+}
+
+aurinstall() {
+    echo "Preparing to install $1"
+    cd /home/$USER
+    mkdir aurinstallTEMP
+    cd aurinstallTEMP
+    curl https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz --output $1.tar.gz
+    tar -xvzf $1.tar.gz
+    cd $1
+    makepkg --install --syncdeps --clean --noconfirm 
+    echo "Removing left over junk files."
+    cd /home/$USER
+    sudo rm -rf aurinstallTEMP
+}
+
+pipinstall() {
+    echo "Preparing to install $1"
+    pip install $1 --break-system-packages
+}
+
+update() { #gotta work on that
+    sudo pacman -Syu
+}
+
+#gotta work on that \/
+
+if [ "$1" == "help" ] && [ "$#" -eq  1 ]
+then
+  help
+elif [ "$1" == "satisfydeps" ] && [ "$#" -eq  1 ]
+then
+  sudo pacman -Sy python
+  sudo pacman -Sy curl
+elif [ "$1" == "install" ] && [ "$#" -eq  2 ]
+then
+  install "$2"
+elif [ "$1" == "install" ] && [ "$2" == "-p" ] && [ "$#" -eq  3 ]
+then
+  pipinstall "$3"
+elif [ "$1" == "install" ] && [ "$2" == "-a" ] && [ "$#" -eq  3 ]
+then
+  aurinstall "$3"
+elif [ "$1" == "remove" ] && [ "$#" -eq  2 ]
+then
+  remove "$2"
+elif [ "$1" == "remove" ] && [ "$2" == "-p" ] && [ "$#" -eq  3 ]
+then
+  pipremove "$3"
+elif [ "$1" == "update" ] && [ "$#" -eq  1 ]
+then
+  sudo pacman -Syu
+elif [ "$1" == "update" ] && [ "$1" == "update" ] && [ "$#" -eq  2 ]
+then
+  sudo pacman -Syu
+else
+  echo "(spm) Error: Invalid Syntax"
+fi
