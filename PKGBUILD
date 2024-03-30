@@ -13,7 +13,7 @@ url="https://slashos-team.github.io/website/"
 source=('git+https://github.com/slashOS-Team/spm.git'
         'spm'
 sha256sums=('SKIP'
-            'SKIP') # THIS WILL BE REPLACEd BY A PROPER SUMs WHEN SPM DEVELOPMENT IS COMPLETED
+            'SKIP') # THIS WILL BE REPLACED BY A PROPER SUMS WHEN SPM DEVELOPMENT IS COMPLETED
 
 build() {
         
