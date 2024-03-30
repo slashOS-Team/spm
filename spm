@@ -21,14 +21,7 @@ help(){
   echo "        install     | installs the specified package using pacman" 
   echo "                    | (use the -a arguement to install from the AUR instead)"
   echo "        update      | updates all packages (use -a to update AUR only or -ap to update both pacman and" 
-  echo "                    | AUR packages) we are currently working on a way to downgrade/update certain packages."
-  echo ""
-  echo "For Developers:"
-  echo "        satisfydeps | installs all dependencies for spm"
-  echo "                    | (you can use this if you want to implement spm to your OS???! just sayin..."
-  echo "                    | or uhh install it in your system lmao."
-  echo "                    | this won't really affect you other than that but it ain't recommended you do it" 
-  echo "                    | for no reason)"
+  echo "                    | AUR packages)."
   echo ""
   echo "NOTE: Experiemental options are not shown here!"
 }
@@ -75,10 +68,6 @@ update() { #gotta work on that
 if [ "$1" == "help" ] && [ "$#" -eq  1 ]
 then
   help
-elif [ "$1" == "satisfydeps" ] && [ "$#" -eq  1 ]
-then
-  sudo pacman -Sy python
-  sudo pacman -Sy curl
 elif [ "$1" == "install" ] && [ "$#" -eq  2 ]
 then
   install "$2"
