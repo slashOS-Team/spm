@@ -1,4 +1,5 @@
 # Copyright © 2024 slashOS Team and Contributors
+# WIP FILE
 
 pkgname=spm-slashos
 pkgver=0.1
