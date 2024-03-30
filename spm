@@ -6,6 +6,7 @@
 # - Manage npm
 # - Manage pip (already implemented but not documented or advertised)
 # - Updating/Downgrading specific packages
+# - Updating AUR and pip packages
 # - Searching in all package managers spm wraps around
 # - Config file (when needed, not big priority rn)
 
@@ -83,10 +84,7 @@ then
   pipremove "$3"
 elif [ "$1" == "update" ] && [ "$#" -eq  1 ]
 then
-  sudo pacman -Syu
-elif [ "$1" == "update" ] && [ "$1" == "-a" ] && [ "$#" -eq  2 ]
-then
-  sudo pacman -Syu
+  update
 else
   echo "(spm) Error: Invalid Syntax"
 fi
