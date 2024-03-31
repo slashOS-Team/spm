@@ -18,6 +18,6 @@ build() {
        chmod +x spm
 }            
 
-package() {
-       install -v spm /usr/bin/
+package()
+       install -Dm644 spm -t "$pkgdir/usr/bin"
 }
