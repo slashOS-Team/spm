@@ -19,5 +19,5 @@ build() {
 }            
 
 package()
-       install -Dm644 spm -t "$pkgdir/usr/bin"
+       install -Dm755 spm -t "$pkgdir/usr/bin"
 }
