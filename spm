@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Copyright © 2024 slashOS Team and Contributors
+
 ### ΤΟ DO ###
 # - Manage flatpak
 # - Manage snap
