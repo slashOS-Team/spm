@@ -11,6 +11,7 @@
 # - Updating AUR and pip packages
 # - Searching in all package managers spm wraps around
 # - Config file (when needed, not big priority rn)
+# - Integration with GNOME software or creation of a completely new graphical frontend.
 
 help(){
   echo "Welcome to the Slash Package Manager!"
@@ -63,7 +64,8 @@ pipinstall() {
 }
 
 update() { 
-    sudo pacman -Syu
+   echo "Updating pacman packages..." 
+   sudo pacman -Syu
 }
 
 if [ "$1" == "help" ] && [ "$#" -eq  1 ]
