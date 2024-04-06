@@ -28,20 +28,22 @@ help(){
   echo "                    | AUR packages)."
   echo ""
   echo "NOTE: Experiemental options are not shown here!"
+  exit 0
 }
 
 remove() {
     sudo pacman -R $1
-    echo "Completed!"
-    sleep 3
+    echo "Completed!"    
 }
 
 pipremove() {
     pip uninstall $1 --break-system-packages
+    exit 0
 }
 
 install() {
     sudo pacman -Sy $1
+    exit 0
 }
 
 aurinstall() {
@@ -52,7 +54,17 @@ aurinstall() {
     curl https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz --output $1.tar.gz
     tar -xvzf $1.tar.gz
     cd $1
-    makepkg --install --syncdeps --clean --noconfirm 
+    makepkg --install --syncdeps --clean --noconfirm
+    if [ $? -eq 0 ]; 
+    then
+      echo "$1 was installed successfully."
+      echo "Adding $1 to spm AUR package history..."
+      sudo echo "$1" >> /etc/spmaurhistory
+    else
+      echo "(spm) Error: Installing $1 failed."
+      exit 1
+    fi
+
     echo "Removing left over junk files."
     cd /home/$USER
     sudo rm -rf aurinstallTEMP
@@ -61,11 +73,13 @@ aurinstall() {
 pipinstall() {
     echo "Preparing to install $1"
     pip install $1 --break-system-packages
+    exit 0
 }
 
 update() { 
    echo "Updating pacman packages..." 
    sudo pacman -Syu
+   exit 0
 }
 
 if [ "$1" == "help" ] && [ "$#" -eq  1 ]
@@ -91,4 +105,5 @@ then
   update
 else
   echo "(spm) Error: Invalid Syntax"
+  exit 1 
 fi
