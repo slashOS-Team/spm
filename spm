@@ -9,7 +9,7 @@
 # - Manage pip (already implemented but not documented or advertised)
 # - Updating/Downgrading specific packages
 # - Updating AUR and pip packages
-# - Searching in all package managers spm wraps around
+# - Searching in all package managers/formats spm wraps around
 # - Config file (when needed, not big priority rn)
 # - Integration with GNOME Software or creation of a completely new graphical frontend.
 
