@@ -12,7 +12,6 @@
 
 help(){
   echo "Welcome to the Slash Package Manager!"
-  echo "This is a very early alpha and is only intended to be used on Arch-Linux based systems."
   echo ""
   echo "Syntax: spm [action] ([arguements] [package])"
   echo ""
