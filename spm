@@ -6,12 +6,13 @@
 # - Manage flatpak
 # - Manage snap
 # - Manage npm
-# - Manage pip (already implemented but not documented or advertised)
 # - Updating/Downgrading specific packages
-# - Updating AUR and pip packages
+# - Manage pip (partially implemented, check the entry below)
+# - Updating PIP packages
 # - Searching in all package managers/formats spm wraps around
 # - Config file (when needed, not big priority rn)
 # - Integration with GNOME Software or creation of a completely new graphical frontend.
+# - Fix bugs (OMG NO WAY!!!1111)
 
 help(){
   echo "Welcome to the Slash Package Manager!"
@@ -20,12 +21,11 @@ help(){
   echo "Syntax: spm [action] ([arguements] [package])"
   echo ""
   echo "Main Actions:"
-  echo "        help        | shows this, don't specify a package after"
-  echo "        remove      | removes a package specified using pacman"
+  echo "        help        | shows this"
+  echo "        remove      | removes a package (any format)"
   echo "        install     | installs the specified package using pacman" 
   echo "                    | (use the -a arguement to install from the AUR instead)"
-  echo "        update      | updates all packages (use -a to update AUR only or -ap to update both pacman and" 
-  echo "                    | AUR packages)."
+  echo "        update      | updates all packages"
   echo ""
   echo "NOTE: Experiemental options are not shown here!"
   exit 0
@@ -64,7 +64,6 @@ aurinstall() {
       echo "(spm) Error: Installing $1 failed."
       exit 1
     fi
-
     echo "Removing left over junk files."
     cd /home/$USER
     sudo rm -rf aurinstallTEMP
@@ -79,6 +78,10 @@ pipinstall() {
 update() { 
    echo "Updating pacman packages..." 
    sudo pacman -Syu
+   echo "Updating AUR packages..." 
+   while read -r line; do
+     aurinstall "$line"
+   done < "/etc/spmaurhistory"
    exit 0
 }
 
