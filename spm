@@ -2,8 +2,7 @@
 
 # Copyright © 2024 slashOS Team and Contributors
 
-### ΤΟ DO ###
-# - Removing packages
+### ΤΟ DO (BEFORE FIRST RELEASEEEE) ###
 # - Manage flatpak
 # - Updating/Downgrading specific packages
 # - Searching
@@ -26,7 +25,21 @@ help(){
 }
 
 remove() {
-    # time to implement proper removing system  
+   while read -r pkg; do
+     if [ "$pkg" == "$1" ]
+     then
+        sudo pacman -R $1
+        exit 0
+     fi
+   done < "/etc/spmaurhistory"
+   while read -r pkg; do
+     if [ "$pkg" == "$1" ]
+     then
+        pip uninstall $1 --break-system-packages
+        exit 0
+     fi
+   done < "/etc/spmpiphistory"
+   sudo pacman -R $1
 }
 
 install() {
