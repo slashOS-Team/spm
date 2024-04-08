@@ -9,6 +9,7 @@
 # - Integration with GNOME Software or creation of a completely new graphical frontend.
 # - Test evwything
 # - Fix bugs (OMG NO WAY!!!1111)
+# - Package final thing
 
 help(){
   echo "Welcome to the Slash Package Manager!"
@@ -41,6 +42,7 @@ remove() {
      fi
    done < "/etc/spmpiphistory"
    sudo pacman -R $1
+   exit 0
 }
 
 install() {
