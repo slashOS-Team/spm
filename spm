@@ -3,7 +3,6 @@
 # Copyright © 2024 slashOS Team and Contributors
 
 ### ΤΟ DO (BEFORE FIRST RELEASEEEE) ###
-# - Manage flatpak
 # - Searching
 # - Integration with GNOME Software or creation of a completely new graphical frontend.
 # - Test evwything
@@ -20,6 +19,7 @@ help(){
   echo "        remove      | removes a package (any format)"
   echo "        install     | installs the specified package using pacman" 
   echo "                    | (use the -a arguement to install from the AUR instead)"
+  echo "                    | (use the -f arguement to install from flatpak)"
   echo "        update      | updates all packages"
   echo ""
   exit 0
@@ -40,12 +40,33 @@ remove() {
         exit 0
      fi
    done < "/etc/spmpiphistory"
+   while read -r pkg; do
+     if [ "$pkg" == "$1" ]
+     then
+        flatpak uninstall $1
+        exit 0
+     fi
+   done < "/etc/spmfphistory"
    sudo pacman -R $1
    exit 0
 }
 
 install() {
     sudo pacman -Sy $1
+    exit 0
+}
+
+flatpakinstall() {
+    flatpak install $1
+    if [ $? -eq 0 ]; 
+    then
+      echo "$1 was installed successfully."
+      echo "Adding $1 to spm flatpak package history..."
+      sudo echo "$1" >> /etc/spmfphistory
+    else
+      echo "(spm) Error: Installing $1 using flatpak failed."
+      exit 1
+    fi
     exit 0
 }
 
@@ -70,8 +91,76 @@ aurinstall() {
     echo "Removing left over junk files."
     cd /home/$USER
     sudo rm -rf aurinstallTEMP
+    exit 0 
 }
 
+pipinstall() {
+    echo "Installing $1 using pip"
+    pip install $1 --break-system-packages
+    if [ $? -eq 0 ]; 
+    then
+      echo "$1 was installed successfully."
+      echo "Adding $1 to spm pip package history..."
+      sudo echo "$1" >> /etc/spmpiphistory
+    else
+      echo "(spm) Error: Installing $1 using pip failed."
+      exit 1
+    fi
+    exit 0
+}
+﻿
+remove() {
+   while read -r pkg; do
+     if [ "$pkg" == "$1" ]
+     then
+        sudo pacman -R $1
+        exit 0
+     fi
+   done < "/etc/spmaurhistory"
+   while read -r pkg; do
+     if [ "$pkg" == "$1" ]
+     then
+        pip uninstall $1 --break-system-packages
+        exit 0
+     fi
+   done < "/etc/spmpiphistory"
+   sudo pacman -R $1
+   exit 0
+}
+﻿
+install() {
+    sudo pacman -Sy $1
+    exit 0
+}
+﻿
+flatpakinstall() {
+    flatpak install $1
+    exit 0
+}
+﻿
+aurinstall() {
+    echo "Preparing to install $1"
+    cd /home/$USER
+    mkdir aurinstallTEMP
+    cd aurinstallTEMP
+    curl https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz --output $1.tar.gz
+    tar -xvzf $1.tar.gz
+    cd $1
+    makepkg --install --syncdeps --clean --noconfirm
+    if [ $? -eq 0 ]; 
+    then
+      echo "$1 was installed successfully."
+      echo "Adding $1 to spm AUR package history..."
+      sudo echo "$1" >> /etc/spmaurhistory
+    else
+      echo "(spm) Error: Installing $1 from the AUR failed."
+      exit 1
+    fi
+    echo "Removing left over junk files."
+    cd /home/$USER
+    sudo rm -rf aurinstallTEMP
+}
+﻿
 pipinstall() {
     echo "Installing $1 using pip"
     pip install $1 --break-system-packages
@@ -113,6 +202,9 @@ then
 elif [ "$1" == "install" ] && [ "$2" == "-a" ] && [ "$#" -eq  3 ]
 then
   aurinstall "$3"
+elif [ "$1" == "install" ] && [ "$2" == "-f" ] && [ "$#" -eq  3 ]
+then
+  flatpakinstall "$3"
 elif [ "$1" == "remove" ] && [ "$#" -eq  2 ]
 then
   remove "$2"
