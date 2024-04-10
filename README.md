@@ -1,5 +1,5 @@
 # spm
-Package manager wraper for slashOS.
+Package manager wrapper for slashOS.
 
 Copyright © 2024 slashOS Team and Contributors
 
