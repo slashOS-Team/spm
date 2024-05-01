@@ -10,7 +10,7 @@
 # - Package final thing
 
 help(){
-  echo "Welcome to the Slash Package Manager!"
+  echo -e "\e[1m---Welcome to the Slash Package Manager!---\e[0m"
   echo ""
   echo "Syntax: spm [action] ([arguements] [package])"
   echo ""
@@ -64,7 +64,7 @@ flatpakinstall() {
       echo "Adding $1 to spm flatpak package history..."
       sudo echo "$1" >> /etc/spmfphistory
     else
-      echo "(spm) Error: Installing $1 using flatpak failed."
+      echo -e "\e[31m(spm) Error:\e[0m Installing $1 using flatpak failed."
       exit 1
     fi
     exit 0
@@ -85,7 +85,7 @@ aurinstall() {
       echo "Adding $1 to spm AUR package history..."
       sudo echo "$1" >> /etc/spmaurhistory
     else
-      echo "(spm) Error: Installing $1 from the AUR failed."
+      echo -e "\e[31m(spm) Error:\e[0m Installing $1 from the AUR failed."
       exit 1
     fi
     echo "Removing left over junk files."
@@ -103,7 +103,7 @@ pipinstall() {
       echo "Adding $1 to spm pip package history..."
       sudo echo "$1" >> /etc/spmpiphistory
     else
-      echo "(spm) Error: Installing $1 using pip failed."
+      echo -e "\e[31m(spm) Error:\e[0m Installing $1 using pip failed."
       exit 1
     fi
     exit 0
@@ -153,7 +153,7 @@ aurinstall() {
       echo "Adding $1 to spm AUR package history..."
       sudo echo "$1" >> /etc/spmaurhistory
     else
-      echo "(spm) Error: Installing $1 from the AUR failed."
+      echo -e "\e[31m(spm) Error:\e[0m Installing $1 from the AUR failed."
       exit 1
     fi
     echo "Removing left over junk files."
@@ -170,7 +170,7 @@ pipinstall() {
       echo "Adding $1 to spm pip package history..."
       sudo echo "$1" >> /etc/spmpiphistory
     else
-      echo "(spm) Error: Installing $1 using pip failed."
+      echo -e "\e[31m(spm) Error:\e[0m Installing $1 using pip failed."
       exit 1
     fi
     exit 0
@@ -212,6 +212,6 @@ elif [ "$1" == "update" ] && [ "$#" -eq  1 ]
 then
   update
 else
-  echo "(spm) Error: Invalid Syntax"
+  echo -e "\e[31m(spm) Error:\e[0m Invalid Syntax"
   exit 1 
 fi
