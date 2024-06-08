@@ -190,6 +190,14 @@ update() {
    exit 0
 }
 
+#search() { # WIP
+#   echo "Found Arch Linux Packages:"
+#   sudo pacman -Ss "$1"
+#   echo "Searching in the AUR..."
+#   echo "Searching PyPI..."
+#   exit 0
+#}
+
 if [ "$1" == "help" ] && [ "$#" -eq  1 ]
 then
   help
@@ -208,6 +216,9 @@ then
 elif [ "$1" == "remove" ] && [ "$#" -eq  2 ]
 then
   remove "$2"
+#elif [ "$1" == "search" ] && [ "$#" -eq  2 ]
+#then
+#  search "$2"
 elif [ "$1" == "update" ] && [ "$#" -eq  1 ]
 then
   update
